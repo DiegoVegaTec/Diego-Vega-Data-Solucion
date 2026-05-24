@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diego-Vega-Data-Solucion</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Librería fundamental para manejo de Excel -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <!-- Librería para procesar PDFs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+</head>
+<body>
+
+    <header>
+        <h1>Diego-Vega-Data-Solucion</h1>
+        <p>Herramientas estáticas de procesamiento y depuración de datos locales</p>
+    </header>
+
+    <main class="container">
+        <!-- Navegación de Funcionalidades -->
+        <nav class="tabs-menu">
+            <button class="tab-btn active" onclick="switchTab('tab-unir')">1. Unir Excels</button>
+            <button class="tab-btn" onclick="switchTab('tab-limpiar')">2. Eliminar ≤ 0</button>
+            <button class="tab-btn" onclick="switchTab('tab-duplicados')">3. Quitar Duplicados</button>
+            <button class="tab-btn" onclick="switchTab('tab-pdf')">4. PDF a Excel</button>
+            <button class="tab-btn" onclick="switchTab('tab-json')">5. JSON a Excel</button>
+        </nav>
+
+        <!-- Contenedores de cada Módulo -->
+        <section id="tab-unir" class="tab-content active">
+            <h2>1. Unir Libros de Excel</h2>
+            <p>Arrastra múltiples archivos Excel para consolidarlos en un único libro maestro (se unirán las hojas con nombres idénticos).</p>
+            <div class="drop-zone" id="drop-unir">
+                <span>Arrastra tus archivos Excel aquí o <label for="file-unir">búscalos</label></span>
+                <input type="file" id="file-unir" multiple accept=".xlsx, .xls" hidden>
+            </div>
+            <div id="file-list-unir" class="file-list"></div>
+            <button class="btn-main" id="btn-unir" disabled>Consolidar y Descargar Excel Maestro</button>
+        </section>
+
+        <section id="tab-limpiar" class="tab-content">
+            <h2>2. Eliminar Filas Negativas y Ceros</h2>
+            <p>Sube un Excel. El sistema analizará todas las filas numéricas; si una fila contiene valores negativos o ceros en sus columnas numéricas, será eliminada por completo.</p>
+            <div class="drop-zone" id="drop-limpiar">
+                <span>Arrastra tu archivo Excel aquí o <label for="file-limpiar">búscalo</label></span>
+                <input type="file" id="file-limpiar" accept=".xlsx, .xls" hidden>
+            </div>
+            <div id="file-info-limpiar" class="file-list"></div>
+            <button class="btn-main" id="btn-limpiar" disabled>Depurar y Descargar</button>
+        </section>
+
+        <section id="tab-duplicados" class="tab-content">
+            <h2>3. Eliminar Filas Duplicadas Exactas</h2>
+            <p>Sube tu Excel para remover las filas que tengan exactamente los mismos datos repetidos en todas las columnas.</p>
+            <div class="drop-zone" id="drop-duplicados">
+                <span>Arrastra tu archivo Excel aquí o <label for="file-duplicados">búscalo</label></span>
+                <input type="file" id="file-duplicados" accept=".xlsx, .xls" hidden>
+            </div>
+            <div id="file-info-duplicados" class="file-list"></div>
+            <button class="btn-main" id="btn-duplicados" disabled>Eliminar Duplicados y Descargar</button>
+        </section>
+
+        <section id="tab-pdf" class="tab-content">
+            <h2>4. Convertir PDF a Excel</h2>
+            <p>Extrae texto tabular de documentos PDF directamente a filas de un archivo de Excel transferible.</p>
+            <div class="drop-zone" id="drop-pdf">
+                <span>Arrastra tu archivo PDF aquí o <label for="file-pdf">búscalo</label></span>
+                <input type="file" id="file-pdf" accept=".pdf" hidden>
+            </div>
+            <div id="file-info-pdf" class="file-list"></div>
+            <button class="btn-main" id="btn-pdf" disabled>Convertir a Excel</button>
+        </section>
+
+        <section id="tab-json" class="tab-content">
+            <h2>5. Convertir JSON a Excel</h2>
+            <p>Sube un archivo con formato JSON estructurado (ej. Array de Objetos) para transformarlo inmediatamente en una tabla de Excel limpia.</p>
+            <div class="drop-zone" id="drop-json">
+                <span>Arrastra tu archivo JSON aquí o <label for="file-json">búscalo</label></span>
+                <input type="file" id="file-json" accept=".json" hidden>
+            </div>
+            <div id="file-info-json" class="file-list"></div>
+            <button class="btn-main" id="btn-json" disabled>Convertir JSON a Excel</button>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 - Diego-Vega-Data-Solucion | Procesamiento 100% Local y Privado</p>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>

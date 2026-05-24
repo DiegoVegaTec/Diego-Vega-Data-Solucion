@@ -1,0 +1,181 @@
+:root {
+    --bg-main: #f4f6f9;
+    --card-bg: #ffffff;
+    --primary: #2563eb;
+    --primary-hover: #1d4ed8;
+    --accent: #10b981;
+    --text-dark: #1e293b;
+    --text-muted: #64748b;
+    --border-color: #cbd5e1;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+header h1 {
+    color: var(--primary);
+    font-size: 1.8rem;
+    margin-bottom: 0.25rem;
+}
+
+header p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+}
+
+.container {
+    flex: 1;
+    max-width: 900px;
+    width: 100%;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Sistema de Pestañas */
+.tabs-menu {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tab-btn {
+    flex: 1;
+    min-width: 130px;
+    padding: 0.75rem;
+    background-color: var(--border-color);
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    color: var(--text-dark);
+    transition: all 0.2s;
+}
+
+.tab-btn.active, .tab-btn:hover {
+    background-color: var(--primary);
+    color: white;
+}
+
+/* Contenido de Pestañas */
+.tab-content {
+    display: none;
+    background-color: var(--card-bg);
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.tab-content h2 {
+    margin-bottom: 0.5rem;
+    color: var(--primary);
+}
+
+.tab-content p {
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+/* Zona de Arrastre Drop Zone */
+.drop-zone {
+    border: 2px dashed var(--primary);
+    padding: 3rem 1rem;
+    text-align: center;
+    border-radius: 8px;
+    background-color: #f8fafc;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.drop-zone:hover, .drop-zone.dragover {
+    background-color: #eff6ff;
+}
+
+.drop-zone span {
+    color: var(--text-muted);
+}
+
+.drop-zone label {
+    color: var(--primary);
+    text-decoration: underline;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+/* Botones y Listas */
+.btn-main {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background-color: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 1.5rem;
+    transition: background-color 0.2s;
+}
+
+.btn-main:hover:not(:disabled) {
+    filter: brightness(0.9);
+}
+
+.btn-main:disabled {
+    background-color: var(--border-color);
+    cursor: not-allowed;
+}
+
+.file-list {
+    margin-top: 1rem;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    background-color: #f1f5f9;
+    padding: 0.5rem;
+    border-radius: 4px;
+    display: none;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--card-bg);
+}
+
+@media(max-width: 600px) {
+    .tabs-menu {
+        flex-direction: column;
+    }
+    .tab-btn {
+        width: 100%;
+    }
+}
