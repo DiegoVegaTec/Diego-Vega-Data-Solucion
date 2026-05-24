@@ -1,7 +1,45 @@
 // Configurar PDF.js Worker globalmente
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
 
-// Gestión de cambio de pestañas
+// --- EFECTO DE FONDO DIGITAL MATRIX ---
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const katakana = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+const alphabet = katakana.split('');
+
+const fontSize = 16;
+let columns = canvas.width / fontSize;
+let rainDrops = Array(Math.floor(columns)).fill(1);
+
+function drawMatrix() {
+    ctx.fillStyle = 'rgba(10, 15, 12, 0.05)'; // Crea el rastro de desvanecimiento
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    ctx.fillStyle = '#00ff41'; // Color verde Matrix clásico
+    ctx.font = fontSize + 'px monospace';
+
+    for (let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+        if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
+    }
+}
+setInterval(drawMatrix, 30);
+
+
+// --- GESTIÓN DE PESTAÑAS ---
 function switchTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -31,6 +69,8 @@ function setupModule(id, isMultiple) {
     const input = document.getElementById(`file-${id}`);
     const listDisplay = document.getElementById(`file-${id === 'unir' ? 'list' : 'info'}-${id}`);
     const btn = document.getElementById(`btn-${id}`);
+
+    if(!zone) return;
 
     zone.addEventListener('click', () => input.click());
     zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('dragover'); });
@@ -78,8 +118,6 @@ document.getElementById('btn-unir').addEventListener('click', async () => {
             if (!sheetsData[sheetName]) {
                 sheetsData[sheetName] = [];
             }
-            // Si es la primera vez que vemos la hoja, agregamos todo incluyendo cabeceras.
-            // Si ya existe, omitimos la primera fila de cabecera para no duplicarla.
             if (sheetsData[sheetName].length === 0) {
                 sheetsData[sheetName] = sheetsData[sheetName].concat(jsonSheet);
             } else {
@@ -109,11 +147,10 @@ document.getElementById('btn-limpiar').addEventListener('click', async () => {
         
         const headers = rows[0];
         const filteredRows = rows.slice(1).filter(row => {
-            // Evaluamos si alguna celda numérica de la fila es menor o igual a cero
             return !row.some(cell => typeof cell === 'number' && cell <= 0);
         });
 
-        filteredRows.unshift(headers); // Reinsertar cabeceras
+        filteredRows.unshift(headers);
         const ws = XLSX.utils.aoa_to_sheet(filteredRows);
         XLSX.utils.book_append_sheet(masterWorkbook, ws, name);
     });
@@ -148,7 +185,7 @@ document.getElementById('btn-duplicados').addEventListener('click', async () => 
     XLSX.writeFile(masterWorkbook, 'Excel_Sin_Duplicados.xlsx');
 });
 
-// 4. CONVERTIR PDF A EXCEL (Estrategia Parser por líneas)
+// 4. CONVERTIR PDF A EXCEL
 document.getElementById('btn-pdf').addEventListener('click', async () => {
     const file = cacheFiles.pdf;
     const arrayBuffer = await file.arrayBuffer();
@@ -159,12 +196,11 @@ document.getElementById('btn-pdf').addEventListener('click', async () => {
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
         
-        // Agrupar strings por coordenadas aproximadas de línea (Y coordinate)
         let lastY = null;
         let line = [];
         
         textContent.items.forEach(item => {
-            let currentY = item.transform[5]; // Posición vertical de la string
+            let currentY = item.transform[5];
             if (lastY !== null && Math.abs(currentY - lastY) > 5) {
                 excelRows.push(line);
                 line = [];
@@ -187,7 +223,6 @@ document.getElementById('btn-json').addEventListener('click', async () => {
     const text = await file.text();
     try {
         const jsonParsed = JSON.parse(text);
-        // Debe ser un array de objetos o un objeto indexado plano
         const dataArray = Array.isArray(jsonParsed) ? jsonParsed : [jsonParsed];
         
         const wb = XLSX.utils.book_new();
